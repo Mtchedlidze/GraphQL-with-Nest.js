@@ -1,0 +1,29 @@
+import {
+  HttpException,
+  Injectable,
+  ExecutionContext,
+  CanActivate,
+} from '@nestjs/common'
+import { UserService } from '../user.service'
+
+@Injectable()
+export class UpdateGuard implements CanActivate {
+  constructor(private readonly userService: UserService) {}
+
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const req = context.switchToHttp().getRequest()
+    console.log(req)
+    const nickname = req.query.nickname || req.user.nickname
+
+    const user = await this.userService.findOne(nickname)
+
+    const ifUnmodifiedHeader = req.headers['if-unmodified-since']
+
+    const userLastModified = new Date(user.updatedAt)
+    if (ifUnmodifiedHeader && ifUnmodifiedHeader !== userLastModified) {
+      throw new HttpException('user has been modified after last fetch', 412)
+    }
+
+    return true
+  }
+}

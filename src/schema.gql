@@ -1,0 +1,90 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type IUser {
+  _id: String!
+  name: String!
+  surname: String!
+  nickname: String!
+  role: String!
+  isDeleted: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  lastVoted: Int!
+  password: String!
+  salt: String!
+  rating: Int!
+  avatar: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type ILoginResponse {
+  token: String!
+  user: IUser!
+}
+
+type Delete {
+  deleted: Float!
+}
+
+type IvoteResponse {
+  message: String!
+  statusCode: Int!
+}
+
+type Query {
+  users(limit: Float, skip: Float): [IUser!]!
+  user(nickname: String!): IUser
+}
+
+type Mutation {
+  addVote(voteoptions: IaddVote!): IvoteResponse
+  updateVote(updatevoteoptions: IeditVote!): IvoteResponse
+  withDrawVote(widthdrawoptions: Iwithdraw!): IvoteResponse
+  register(user: IcreateUser!): IUser!
+  login(loginUserInput: LoginUserInput!): ILoginResponse
+  delete(nickname: String!): Delete!
+  update(updateoptions: IUpdateUser, nickname: String): IUser!
+}
+
+input IaddVote {
+  vote: Float!
+  from: String!
+  to: String!
+}
+
+input IeditVote {
+  vote: Float!
+  from: String!
+  to: String!
+}
+
+input Iwithdraw {
+  from: String!
+  to: String!
+}
+
+input IcreateUser {
+  name: String!
+  surname: String!
+  nickname: String!
+  password: String!
+  role: String!
+}
+
+input LoginUserInput {
+  nickname: String!
+  password: String!
+}
+
+input IUpdateUser {
+  name: String
+  surname: String
+  password: String
+}
